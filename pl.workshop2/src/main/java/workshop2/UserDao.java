@@ -1,5 +1,5 @@
 package workshop2;
-
+/* commit and push*/
 import java.sql.*;
 
 public class UserDao {
@@ -38,7 +38,6 @@ public class UserDao {
 
     public void updateUser(User user){
         String query = "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?";
-
         try( Connection userConnection = DriverManager.getConnection(
                 DbUtil.urlString,
                 DbUtil.getDbUser(),
