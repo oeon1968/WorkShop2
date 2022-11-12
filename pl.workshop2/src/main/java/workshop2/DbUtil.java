@@ -28,15 +28,6 @@ public class DbUtil {
     private static  final String dbPass = "coderslab";
     public static final String urlString = "jdbc:mysql://localhost:3306/"+dbName+"?useSSL=false&characterEncoding=utf8&serverTimezone=UTC";
 
-    //metody klasy
-    /*private static Connection myConnection(){
-        try (Connection dbConnection = DriverManager.getConnection(urlString, dbUser, dbPass)) {
-            return dbConnection;
-        } catch (SQLException sqlEx) {
-            sqlEx.printStackTrace();
-        }
-        return null;
-    }*/
 
 //INSERT
     public static int insert(Connection conn, String query, String... params) {
@@ -90,13 +81,16 @@ public class DbUtil {
     }
 
 //UPDATE
-    private static final String UPDATE_QUERY = "UPDATE tableName SET colName = ? WHERE id = ?";
-    public static void updateOneRecord(Connection conn, String tableName, String colName, String colValue, int id) {
+
+    public static void update(Connection conn, String query, int id, String... setValues) {
+        int i = 1; //od drugiego parametru będzie wstawiał dane z setValues
+
         try (PreparedStatement statement =
-                     conn.prepareStatement(UPDATE_QUERY.replace("tableName", tableName)
-                             .replace("colName", colName))) {
-            statement.setString(1, colValue);
-            statement.setInt(2, id);
+                     conn.prepareStatement(query)) {
+            for (String value: setValues) {
+                statement.setString(i++, value);
+            }
+            statement.setInt(i, id);
             statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

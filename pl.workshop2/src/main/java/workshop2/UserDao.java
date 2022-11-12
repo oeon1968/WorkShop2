@@ -36,4 +36,19 @@ public class UserDao {
         return user;
     }
 
+    public void updateUser(User user){
+        String query = "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?";
+
+        try( Connection userConnection = DriverManager.getConnection(
+                DbUtil.urlString,
+                DbUtil.getDbUser(),
+                DbUtil.getDbPass())){
+                DbUtil.update(userConnection,query, user.getId(),
+                    user.getName(),user.getEmail(), user.getPassword());
+        }
+        catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+    }
+
 }

@@ -8,17 +8,20 @@ public class MainUserDao {
 
         UserDao myUserDao = new UserDao();
         User myUser = new User();
-        myUser.setName(tmpName);
+        /*myUser.setName(tmpName);
         myUser.setEmail(tmpName+"@email.pl");
         myUser.setPassword(tmpName);
-        myUser = myUserDao.createUser(myUser);
+        myUser = myUserDao.createUser(myUser);*/
 
 // Można wykorzystać metodę inicjującą obiekt user:
         //user() - create user
         //user(id) - select user
 
-        myUser = myUserDao.readUser(10);
-        System.out.println(myUser.id+" - "+myUser.getName());
+        myUser = myUserDao.readUser(12);
+        myUser.setName("Dariusz");
+        myUser.setEmail("dariusz@email.pl");
+
+        myUserDao.updateUser(myUser);
 
 
     }
