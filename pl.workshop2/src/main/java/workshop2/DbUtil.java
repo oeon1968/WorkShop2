@@ -24,19 +24,19 @@ public class DbUtil {
         return dbPass;
     }
 
-    private static String dbUser = "root";
-    private static  String dbPass = "coderslab";
+    private static final String dbUser = "root";
+    private static  final String dbPass = "coderslab";
     public static final String urlString = "jdbc:mysql://localhost:3306/"+dbName+"?useSSL=false&characterEncoding=utf8&serverTimezone=UTC";
 
     //metody klasy
-    private static Connection myConnection(){
+    /*private static Connection myConnection(){
         try (Connection dbConnection = DriverManager.getConnection(urlString, dbUser, dbPass)) {
             return dbConnection;
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
         }
         return null;
-    }
+    }*/
 
 //INSERT
     public static int insert(Connection conn, String query, String... params) {
@@ -59,24 +59,29 @@ public class DbUtil {
     }
 
 //SELECT
-    public static ResultSet getUser(Connection conn, String selectStr, int userId){
-       ResultSet resultSet;
+    public static User getUser(Connection conn, String selectStr, int userId){
+       User myUser = new User();
 
         try (PreparedStatement statement = conn.prepareStatement(selectStr))
         {
             statement.setInt(1, userId);
-            resultSet = statement.executeQuery();
-            return resultSet;
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+             myUser.setId(userId);
+             myUser.setName(resultSet.getString("name"));
+             myUser.setEmail(resultSet.getString("email"));
+             myUser.setPassword(resultSet.getString("password"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return myUser;
     }
 //DELETE
     private static final String DELETE_QUERY = "DELETE FROM tableName where id = ?";
     public static void remove(Connection conn, String tableName, int id) {
         try (PreparedStatement statement =
-                     conn.prepareStatement(DELETE_QUERY.replace("tableName", tableName));) {
+                     conn.prepareStatement(DELETE_QUERY.replace("tableName", tableName))) {
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (Exception e) {
@@ -92,7 +97,6 @@ public class DbUtil {
                              .replace("colName", colName))) {
             statement.setString(1, colValue);
             statement.setInt(2, id);
-            System.out.println(statement.toString());
             statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,10 +104,10 @@ public class DbUtil {
     }
 
 //PRINT
-    public static void printData(Connection conn, String query, String... columnNames) throws SQLException {
+    public static void printData(Connection conn, String query, String... columnNames) {
 
         try (PreparedStatement statement = conn.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery();) {
+             ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 for (String columnName : columnNames) {
                     System.out.print(resultSet.getString(columnName)+"|");

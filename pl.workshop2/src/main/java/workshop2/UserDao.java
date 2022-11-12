@@ -19,4 +19,21 @@ public class UserDao {
         }
         return user;
     }
+
+    public User readUser(int userId){
+        String selectSTR = "SELECT name, email, password FROM users WHERE id = ?";
+        User user = new User();
+        try( Connection userConnection = DriverManager.getConnection(
+                DbUtil.urlString,
+                DbUtil.getDbUser(),
+                DbUtil.getDbPass())){
+            user = DbUtil.getUser(userConnection, selectSTR, userId);
+        }
+         catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        return user;
+    }
+
 }
